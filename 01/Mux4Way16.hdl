@@ -15,68 +15,7 @@ CHIP Mux4Way16 {
     
     PARTS:
     //// Replace this comment with your code.
-    //// bit 0
-    Mux(a=a[0], b=b[0], sel=sel[0], out=ab0Out);
-    Mux(a=c[0], b=d[0], sel=sel[0], out=cd0Out);
-    Mux(a=ab0Out, b=cd0Out, sel=sel[1], out=out[0]);
-    //// bit 1
-    Mux(a=a[1], b=b[1], sel=sel[0], out=ab1Out);
-    Mux(a=c[1], b=d[1], sel=sel[0], out=cd1Out);
-    Mux(a=ab1Out, b=cd1Out, sel=sel[1], out=out[1]);
-    //// bit 2
-    Mux(a=a[2], b=b[2], sel=sel[0], out=ab2Out);
-    Mux(a=c[2], b=d[2], sel=sel[0], out=cd2Out);
-    Mux(a=ab2Out, b=cd2Out, sel=sel[1], out=out[2]);
-    //// bit 3
-    Mux(a=a[3], b=b[3], sel=sel[0], out=ab3Out);
-    Mux(a=c[3], b=d[3], sel=sel[0], out=cd3Out);
-    Mux(a=ab3Out, b=cd3Out, sel=sel[1], out=out[3]);
-    //// bit 4
-    Mux(a=a[4], b=b[4], sel=sel[0], out=ab4Out);
-    Mux(a=c[4], b=d[4], sel=sel[0], out=cd4Out);
-    Mux(a=ab4Out, b=cd4Out, sel=sel[1], out=out[4]);
-    //// bit 5
-    Mux(a=a[5], b=b[5], sel=sel[0], out=ab5Out);
-    Mux(a=c[5], b=d[5], sel=sel[0], out=cd5Out);
-    Mux(a=ab5Out, b=cd5Out, sel=sel[1], out=out[5]);
-    //// bit 6
-    Mux(a=a[6], b=b[6], sel=sel[0], out=ab6Out);
-    Mux(a=c[6], b=d[6], sel=sel[0], out=cd6Out);
-    Mux(a=ab6Out, b=cd6Out, sel=sel[1], out=out[6]);
-    //// bit 7
-    Mux(a=a[7], b=b[7], sel=sel[0], out=ab7Out);
-    Mux(a=c[7], b=d[7], sel=sel[0], out=cd7Out);
-    Mux(a=ab7Out, b=cd7Out, sel=sel[1], out=out[7]);
-    //// bit 8
-    Mux(a=a[8], b=b[8], sel=sel[0], out=ab8Out);
-    Mux(a=c[8], b=d[8], sel=sel[0], out=cd8Out);
-    Mux(a=ab8Out, b=cd8Out, sel=sel[1], out=out[8]);
-    //// bit 9
-    Mux(a=a[9], b=b[9], sel=sel[0], out=ab9Out);
-    Mux(a=c[9], b=d[9], sel=sel[0], out=cd9Out);
-    Mux(a=ab9Out, b=cd9Out, sel=sel[1], out=out[9]);
-    //// bit 10
-    Mux(a=a[10], b=b[10], sel=sel[0], out=ab10Out);
-    Mux(a=c[10], b=d[10], sel=sel[0], out=cd10Out);
-    Mux(a=ab10Out, b=cd10Out, sel=sel[1], out=out[10]);
-    //// bit 11
-    Mux(a=a[11], b=b[11], sel=sel[0], out=ab11Out);
-    Mux(a=c[11], b=d[11], sel=sel[0], out=cd11Out);
-    Mux(a=ab11Out, b=cd11Out, sel=sel[1], out=out[11]);
-    //// bit 12
-    Mux(a=a[12], b=b[12], sel=sel[0], out=ab12Out);
-    Mux(a=c[12], b=d[12], sel=sel[0], out=cd12Out);
-    Mux(a=ab12Out, b=cd12Out, sel=sel[1], out=out[12]);
-    //// bit 13
-    Mux(a=a[13], b=b[13], sel=sel[0], out=ab13Out);
-    Mux(a=c[13], b=d[13], sel=sel[0], out=cd13Out);
-    Mux(a=ab13Out, b=cd13Out, sel=sel[1], out=out[13]);
-    //// bit 14
-    Mux(a=a[14], b=b[14], sel=sel[0], out=ab14Out);
-    Mux(a=c[14], b=d[14], sel=sel[0], out=cd14Out);
-    Mux(a=ab14Out, b=cd14Out, sel=sel[1], out=out[14]);
-    //// bit 15
-    Mux(a=a[15], b=b[15], sel=sel[0], out=ab15Out);
-    Mux(a=c[15], b=d[15], sel=sel[0], out=cd15Out);
-    Mux(a=ab15Out, b=cd15Out, sel=sel[1], out=out[15]);
+    Mux16(a=a, b=b, sel=sel[0], out=abIn);
+    Mux16(a=c, b=d, sel=sel[0], out=cdIn);
+    Mux16(a=abIn, b=cdIn, sel=sel[1], out=out);
 }
