@@ -1,12 +1,13 @@
 @R0
 D=M
-@LOOP
-D;JGT       // R0 > 0 ?
+@RESET
+D;JGE       // R0 > 0 ?
 @R0
 M=-M        // R0 = -R0
 @R1
 M=-M        // R1 = -R1
 
+(RESET)
 @R2
 M=0         // R2 = 0
 
