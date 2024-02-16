@@ -33,4 +33,54 @@ CHIP CPU {
 
     PARTS:
     //// Replace this comment with your code.
+    
+    Mux16(a=instruction, b=aluOutRegA, sel=instruction[15], out=regAIn);
+    Or(a=instruction[15], b=instruction[5], out=loadA);
+    Register(in=regAIn, load=loadA, out[0..14]=addressM, out=regAOutPCIn, out=regAOutAluIn);
+    Mux16(a=regAOutAluIn, b=inM, sel=instruction[12], out=aluIn);
+
+    And(a=instruction[15], b=instruction[4], out=loadD);
+    Register(in=aluOutRegD, load=loadD, out=registerDOut);
+    ALU(x=registerDOut, y=regAOutAluIn,
+        zx=instruction[11],
+        nx=instruction[10],
+        zy=instruction[9],
+        ny=instruction[8],
+        f=instruction[7],
+        no=instruction[6],
+        out=aluOutRegA, out=aluOutRegD, zr=zr, ng=ng);
+
+    PC(in=regAOutPCIn, inc=incPC, load=loadPC, reset=reset, out[0..14]=pc);
+    
+    And(a=instruction[15], b=instruction[3], out=writeM);
+
+    Not(in=zr, out=JNE);
+    Not(in=ng, out=JGE);
+    Or(a=zr, b=ng, out=JLE);
+    Or(a=false, b=ng, out=JLT);
+    Or(a=false, b=zr, out=JEQ);
+    And(a=JGE, b=JNE, out=JGT);
+    Not(in=false, out=JMP);
+    Not(in=true, out=null);
+
+    Mux8Way16(sel=instruction[0..2],
+    a[0]=null,
+    b[0]=JGT,
+    c[0]=JEQ,
+    d[0]=JGE,
+    e[0]=JLT,
+    f[0]=JNE,
+    g[0]=JLE,
+    h[0]=JMP,
+    out[0]=JMPPC
+    );
+
+    And(a=instruction[0], b=JMPPC, out=loadPC);
+    Not(in=loadPC, out=incPC);
+
+
+
+    
+
+
 }
