@@ -35,8 +35,8 @@ CHIP CPU {
     //// Replace this comment with your code.
     
     Mux16(a=instruction, b=aluOutRegA, sel=instruction[15], out=regAIn);
-    Or(a=j, b=instruction[5], out=loadA);
-    Not(in=instruction[15], out=j);
+    Or(a=notInstructionType, b=instruction[5], out=loadA);
+    Not(in=instruction[15], out=notInstructionType);
     Register(in=regAIn, load=loadA, out[0..14]=addressM, out=regAOutPCIn, out=regAOutAluIn);
     Mux16(a=regAOutAluIn, b=inM, sel=instruction[12], out=aluIn);
 
