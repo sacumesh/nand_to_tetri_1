@@ -35,20 +35,21 @@ CHIP CPU {
     //// Replace this comment with your code.
     
     Mux16(a=instruction, b=aluOutRegA, sel=instruction[15], out=regAIn);
-    Or(a=instruction[15], b=instruction[5], out=loadA);
+    Or(a=j, b=instruction[5], out=loadA);
+    Not(in=instruction[15], out=j);
     Register(in=regAIn, load=loadA, out[0..14]=addressM, out=regAOutPCIn, out=regAOutAluIn);
     Mux16(a=regAOutAluIn, b=inM, sel=instruction[12], out=aluIn);
 
     And(a=instruction[15], b=instruction[4], out=loadD);
-    Register(in=aluOutRegD, load=loadD, out=registerDOut);
-    ALU(x=registerDOut, y=regAOutAluIn,
+    DRegister(in=aluOutRegD, load=loadD, out=registerDOut);
+    ALU(x=registerDOut, y=aluIn,
         zx=instruction[11],
         nx=instruction[10],
         zy=instruction[9],
         ny=instruction[8],
         f=instruction[7],
         no=instruction[6],
-        out=aluOutRegA, out=aluOutRegD, zr=zr, ng=ng);
+        out=aluOutRegA, out=aluOutRegD, zr=zr, ng=ng, out=outM);
 
     PC(in=regAOutPCIn, inc=incPC, load=loadPC, reset=reset, out[0..14]=pc);
     
@@ -75,7 +76,7 @@ CHIP CPU {
     out[0]=JMPPC
     );
 
-    And(a=instruction[0], b=JMPPC, out=loadPC);
+    And(a=instruction[15], b=JMPPC, out=loadPC);
     Not(in=loadPC, out=incPC);
 
 
