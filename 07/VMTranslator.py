@@ -1,4 +1,4 @@
-# Constants representing command types
+# constants representing command types
 CT_ARITHMETIC = 'CT_ARITHMETIC'
 CT_PUSH = 'CT_PUSH'
 CT_POP = 'CT_POP'
@@ -9,6 +9,7 @@ CT_FUNCTION = 'CT_FUNCTION'
 CT_RETURN = 'CT_RETURN'
 CT_CALL = 'CT_CALL'
 
+# constants represeting vm command keyword
 C_ADD = 'add'
 C_SUB = 'sub'
 C_NEG = 'neg'
@@ -20,6 +21,17 @@ C_OR = 'or'
 C_NOT = 'not'
 C_PUSH = 'push'
 C_POP = 'pop'
+
+#
+SEGMENT_LOCAL = 'local'
+SEGMENT_ARGUMENT  = 'argument'
+SEGMENT_STATIC  = 'static'
+SEGMENT_CONSTANT = 'constant'
+SEGMENT_THIS = 'this'
+SEGMENT_THAT = 'that'
+SEGMENT_POINTER = 'pointer'
+SEGMENT_TEMP = 'temp'
+
 
 COMMAND_TYPE_MAP = {
     C_ADD: CT_ARITHMETIC,
@@ -33,7 +45,16 @@ COMMAND_TYPE_MAP = {
     C_NOT: CT_ARITHMETIC,
     C_PUSH: CT_PUSH,
     C_POP: CT_POP
-    }
+}
+
+COMMAND_SYMBOL_MAP = {
+    C_ADD: '+',
+    C_SUB: '-',
+    C_NEG: '-',
+    C_AND: '&',
+    C_OR: '|',
+    C_NOT: '!'
+}
 
 class Parser:
 
@@ -104,36 +125,49 @@ class Parser:
 class CodeWriter:
 
     def __init__(self, file):
-        self.file = open('file', 'w')
+        self.file = open(file, 'w')
         pass
+
+
+    def _get_symbol(self, command):
+        symbol = COMMAND_SYMBOL_MAP.get(command, None)
+        if symbol:
+            return symbol
+        
+        raise SyntaxError
 
     def write_arithmetic(self, command):
-        snippet = """
-            @SP
-            D=M
-            A=A-1
-            M=D[op]M
-        """
-        if command == C_ADD:
-            snippet = snippet.replace('[op]', '+')
-        elif command == C_SUB:
-            snippet = snippet.replace('[op]', '-')
         
-        print(snippet)
+        symbol = self._get_symbol(command)
+        lines = ['// START {}'.format(command)]
+        if command in (C_NOT, C_NEG):
+            lines += ['@SP', 'A=M-1', 'M={}M'.format(symbol), '']
+        elif command in (C_ADD, C_SUB, C_OR, C_AND):
+            lines += ['@SP', 'AM=M-1 //SP--', 'D=M', 'A=A-1', 'M=D{}M'.format(symbol)]
+        else:
+            print(command)
+            raise SyntaxError
+        lines += ['// END {}'.format(command), '']
 
-
-        pass
+        self.file.writelines([line + '\n' for line in lines])
 
     def write_push_pop(self, command, segment, index):
-        print(command, segment, index)
-        pass
+        
+        if segment == SEGMENT_CONSTANT:
+            line = ['@{}'.format(index), 'D=A', '@SP', 'A=M', 'M=D', '@SP', 'M=M+1']
+        elif segment in (SEGMENT_LOCAL, SEGMENT_ARGUMENT, SEGMENT_THIS, SEGMENT_THAT):
+            if command == C_POP:
+                line = ['@SP', 'AM=M-1', 'D=M', '@LCL', 'A=A+{}'.format(index), 'M=D']
+            elif command == C_PUSH:
+                line = ['@LCL', 'A=A+{}'.format(index), 'D=M', '@SP', 'A=M', 'M=D', '@SP', 'M=M+1']
+
 
     def close(self):
         self.file.close()
 
 if __name__ == '__main__':
     parser = Parser('./MemoryAccess/BasicTest/BasicTest.vm')
-    code_writer = CodeWriter('')
+    code_writer = CodeWriter('./MemoryAccess/BasicTest/sac.vm')
     while parser.has_more_lines():
         parser.advance()
         command_type = parser.command_type()
